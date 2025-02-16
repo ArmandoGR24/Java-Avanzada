@@ -1,38 +1,60 @@
-package com.codigomaestro.ev1armando_gonzalez.controllers;
+package com.codigomaestro.ev1armando_gonzalez;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-
-import static com.codigomaestro.ev1armando_gonzalez.connection.DB.getConnection;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.RequestDispatcher;
+import com.codigomaestro.ev1armando_gonzalez.controllers.StatsController;
+import com.codigomaestro.ev1armando_gonzalez.models.User;
+import com.codigomaestro.ev1armando_gonzalez.models.Stats;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
-@WebServlet(name = "usercontroller", value = "/usercontroller")
-public class UserController extends HttpServlet {
+import com.codigomaestro.ev1armando_gonzalez.controllers.UserController;
 
-    private static final String INSERT_USER = "INSERT INTO users (name,age,sex,stature,weight) VALUES (?,?,?,?,?)";
-    private static final String SELECT = "SELECT * FROM users";
-    private static final String DELETE = "DELETE FROM users WHERE id = ?";
-    private static final String UPDATE = "UPDATE users SET name = ?, age = ?,sex = ?,stature = ?,weight = ? WHERE id = ?";
+@WebServlet(name = "userservlet", value = "/userservlet")
+public class UserServlet extends HttpServlet {
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // Establecer el tipo de contenido de la respuesta
+    private UserController userController = new UserController();
+    private Stats stats = new Stats();
+    private StatsController statsController = new StatsController();
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html");
 
-        // Obtener los parámetros del formulario
         String name = request.getParameter("name");
         int age = Integer.parseInt(request.getParameter("age"));
         String sex = request.getParameter("sex");
         double stature = Double.parseDouble(request.getParameter("stature"));
         double weight = Double.parseDouble(request.getParameter("weight"));
+        int cadera = Integer.parseInt(request.getParameter("cadera"));
 
-        response.getWriter().println("Name: " + name);
-        response.getWriter().println("Age: " + age);
-        response.getWriter().println("sex: " + sex);
-        response.getWriter().println("stature: " + stature);
-        response.getWriter().println("weight: " + weight);
+        User user = new User();
+        user.setName(name);
+        user.setAge(age);
+        user.setSex(sex);
+        user.setStature(stature);
+        user.setWeight(weight);
+        user.setCadera(cadera);
 
+        int userId = userController.insertUser(user);
+        if (userId != -1) {
+            user.setId(userId);
+
+            double iac = statsController.calculateIAC(cadera, stature);
+            double imc = statsController.calculateIMC(weight, stature);
+
+            stats.setIdUser(user.getId());
+            stats.setIAC((float) iac);
+            stats.setIMC((float) imc);
+
+            statsController.insertStats(stats);
+
+            request.setAttribute("user", user);
+            request.setAttribute("stats", stats);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("results.jsp");
+            dispatcher.forward(request, response);
+        } else {
+            response.getWriter().println("Error: User insertion failed.");
+        }
     }
-
 }

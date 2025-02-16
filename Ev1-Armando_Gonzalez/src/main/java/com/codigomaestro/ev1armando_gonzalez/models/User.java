@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class User {
 
-    private int id, age;
+    private int id, age, cadera;
     private String name, sex;
     private double stature, weight;
 
@@ -13,6 +13,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", age=" + age +
+                ", cadera=" + cadera +
                 ", name='" + name + '\'' +
                 ", sex='" + sex + '\'' +
                 ", stature=" + stature +
@@ -25,13 +26,14 @@ public class User {
         if (o == null || getClass() != o.getClass()) return false;
 
         User user = (User) o;
-        return id == user.id && age == user.age && Double.compare(stature, user.stature) == 0 && Double.compare(weight, user.weight) == 0 && Objects.equals(name, user.name) && Objects.equals(sex, user.sex);
+        return id == user.id && age == user.age && cadera == user.cadera && Double.compare(stature, user.stature) == 0 && Double.compare(weight, user.weight) == 0 && Objects.equals(name, user.name) && Objects.equals(sex, user.sex);
     }
 
     @Override
     public int hashCode() {
         int result = id;
         result = 31 * result + age;
+        result = 31 * result + cadera;
         result = 31 * result + Objects.hashCode(name);
         result = 31 * result + Objects.hashCode(sex);
         result = 31 * result + Double.hashCode(stature);
@@ -85,5 +87,13 @@ public class User {
 
     public void setWeight(double weight) {
         this.weight = weight;
+    }
+
+    public int getCadera() {
+        return cadera;
+    }
+
+    public void setCadera(int cadera) {
+        this.cadera = cadera;
     }
 }
