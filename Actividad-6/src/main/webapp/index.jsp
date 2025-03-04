@@ -1,13 +1,14 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://www.codigomaestro.com/tags" prefix="custom" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <title>Custom Tags Example</title>
 </head>
 <body>
-<h1><%= "Hello World!" %>
-</h1>
+<custom:welcome />
 <br/>
-<a href="hello-servlet">Hello Servlet</a>
+<custom:uppercase>
+    <%= request.getAttribute("message") %>
+</custom:uppercase>
 </body>
 </html>
