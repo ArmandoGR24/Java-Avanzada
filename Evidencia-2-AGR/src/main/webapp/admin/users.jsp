@@ -1,3 +1,6 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="tag" uri="http://example.com/tags" %>
+
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en">
 
@@ -19,18 +22,30 @@
     </a>
       <hr class="sidebar-divider my-0">
       <ul class="navbar-nav text-light" id="accordionSidebar">
-        <li class="nav-item"><a class="nav-link active" href="/admin/users.jsp"><i class="fas fa-table"></i><span>Usuarios</span></a></li>
-        <li class="nav-item"><a class="nav-link" href="/login.html"><i class="far fa-user-circle"></i><span>Login</span></a></li>
-        <li class="nav-item"><a class="nav-link" href="/register.html"><i class="fas fa-user-circle"></i><span>Register</span></a></li>
-        <li class="nav-item"><a class="nav-link" href="/blank.html"><i class="fas fa-window-maximize"></i><span>Blank Page</span></a></li>
+        <li class="nav-item"><a class="nav-link active" href="/Evidencia_2_AGR_war_exploded/admin/users.jsp"><i class="fas fa-table"></i><span>Usuarios</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="/Evidencia_2_AGR_war_exploded/user/pacient.jsp"><i class="fas fa-table"></i><span>Pacientes</span></a></li>
+        <li class="nav-item"><a class="nav-link" href="/Evidencia_2_AGR_war_exploded/"><i class="far fa-user-circle"></i><span>Inicio</span></a></li>
       </ul>
-      <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
+      <div class="text-center d-none d-md-inline">
+        <a href="../LogoutServlet" class="btn rounded-circle border-0" id="sidebarToggle" role="button"></a>
+      </div>
     </div>
   </nav>
   <div class="d-flex flex-column" id="content-wrapper">
     <div id="content">
       <nav class="navbar navbar-expand bg-white shadow mb-4 topbar">
-        <div class="container-fluid"><button class="btn btn-link d-md-none rounded-circle me-3" id="sidebarToggleTop" type="button"><i class="fas fa-bars"></i></button></div>
+        <div class="container-fluid">
+          <%
+            HttpSession currentSession = request.getSession(false);
+            if (currentSession != null && currentSession.getAttribute("username") != null) {
+              String username = (String) currentSession.getAttribute("username");
+              String color = (String) currentSession.getAttribute("color");
+          %>
+          <span style="color: <%= color %>;">Usuario Activo: <%= username %></span>
+          <%
+            }
+          %>
+        </div>
       </nav>
       <div class="container-fluid">
         <h3 class="text-dark mb-4">Usuarios</h3>
@@ -46,59 +61,9 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-6 text-nowrap">
-                <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
-                  <option value="10" selected="">10</option>
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                  <option value="100">100</option>
-                </select>&nbsp;</label></div>
-              </div>
-              <div class="col-md-6">
-                <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search"></label></div>
-              </div>
             </div>
             <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-              <table class="table my-0" id="dataTable">
-                <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Position</th>
-                  <th>Office</th>
-                  <th>Age</th>
-                  <th>Start date</th>
-                  <th>Salary</th>
-                </tr>
-                </thead>
-                <tbody>
-                <!-- Data rows will be dynamically inserted here -->
-                </tbody>
-                <tfoot>
-                <tr>
-                  <td><strong>Name</strong></td>
-                  <td><strong>Position</strong></td>
-                  <td><strong>Office</strong></td>
-                  <td><strong>Age</strong></td>
-                  <td><strong>Start date</strong></td>
-                  <td><strong>Salary</strong></td>
-                </tr>
-                </tfoot>
-              </table>
-            </div>
-            <div class="row">
-              <div class="col-md-6 align-self-center">
-                <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
-              </div>
-              <div class="col-md-6">
-                <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                  <ul class="pagination">
-                    <li class="page-item disabled"><a class="page-link" aria-label="Previous" href="#"><span aria-hidden="true">«</span></a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" aria-label="Next" href="#"><span aria-hidden="true">»</span></a></li>
-                  </ul>
-                </nav>
-              </div>
+              <tag:userstable/>
             </div>
           </div>
         </div>

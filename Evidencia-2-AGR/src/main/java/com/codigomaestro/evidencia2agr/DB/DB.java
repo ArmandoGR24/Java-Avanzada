@@ -1,44 +1,29 @@
 package com.codigomaestro.evidencia2agr.DB;
 
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.List;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public class DB {
 
-    private static DataSource dataSource;
+    public static Connection getConnection() throws SQLException, NamingException {
 
-    static {
+        Context ctx = new InitialContext();
+        DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/3069543DataSource");
+        System.out.println("DataSource: " + ds);
+        Connection conn = ds.getConnection();
+        return conn;
+    }
+
+    public static void close(Connection conn) {
         try {
-            Context initContext = new InitialContext();
-            Context envContext = (Context) initContext.lookup("java:/comp/env");
-            dataSource = (DataSource) envContext.lookup("jdbc/T03069543");
-        } catch (NamingException e) {
+            conn.close();
+        } catch (SQLException e) {
             e.printStackTrace();
-            throw new ExceptionInInitializerError("DataSource initialization failed");
         }
     }
 
-    public static Connection getConnection() throws SQLException {
-        return dataSource.getConnection();
-    }
-
-    public static List<String> getDatabases() throws SQLException {
-        List<String> databases = new ArrayList<>();
-        try (Connection connection = getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SHOW DATABASES")) {
-            while (resultSet.next()) {
-                databases.add(resultSet.getString(1));
-            }
-        }
-        return databases;
-    }
 }

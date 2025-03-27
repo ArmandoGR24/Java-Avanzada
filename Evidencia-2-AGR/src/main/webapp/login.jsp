@@ -23,7 +23,7 @@
                 <div class="text-center">
                   <h4 class="text-dark mb-4">Login</h4>
                 </div>
-                <form class="user">
+                <form class="user" action="LoginServlet" method="post">
                   <div class="mb-3"><input id="user" class="form-control form-control-user" type="text" aria-describedby="user" placeholder="Usuario" name="user" /></div>
                   <div class="mb-3"><input class="form-control form-control-user" type="password" id="pass" placeholder="Contraseña" name="pass"></div>
                   <div class="mb-3">
